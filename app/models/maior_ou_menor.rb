@@ -41,6 +41,7 @@ def pede_um_numero(chutes, tentativa, limite_de_tentativas)
     puts "Chutes até agora: #{chutes}"
     puts "Entre com o número"
     chute = gets.strip
+
     puts "Será que você acertou ? Você chutou #{chute}"
     chute.to_i
 end
@@ -69,15 +70,26 @@ def incrementa_uma_chance(tentativa, numero_secreto, chute)
 
     if quase_acertou == 1
         puts "Você errou por um número. Terá mais uma chance."
-        tentativa = 2
+        tentativa = 4
     else
+        tentativa += 1
+    end
+end
+
+def verifica_numero_repetido(chutes, chute, tentativa)
+    if chutes.include? chute.to_i
+        debugger
+        puts "Número já escolhido. Tente outro número."
+        tentativa -= 1
+    else
+        debugger
         tentativa += 1
     end
 end
 
 def joga(nome, dificuldade)
     numero_secreto = sorteia_numero_secreto(dificuldade)
-    limite_de_tentativas = 2
+    limite_de_tentativas = 5
     tentativa = 1
     dar_chance = "Sim"
     
@@ -86,6 +98,7 @@ def joga(nome, dificuldade)
 
     while limite_de_tentativas >= tentativa
         chute = pede_um_numero(chutes, tentativa, limite_de_tentativas)
+        tentativa = verifica_numero_repetido(chutes, chute, tentativa)
         chutes << chute
     
         pontos_a_perder = (chute - numero_secreto).abs / 2.0
@@ -97,7 +110,7 @@ def joga(nome, dificuldade)
             tentativa = incrementa_uma_chance(tentativa, numero_secreto, chute)
             dar_chance = "Não"
         else
-            tentativa += 1
+            tentativa
         end
     end
 
